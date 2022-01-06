@@ -3,10 +3,15 @@ import logo from "./logo.svg";
 import { Button, Table, Tag, Space, Form, Input } from "antd";
 import "./App.css";
 import "antd/dist/antd.less";
+import { QueryClientProvider, useMutation, QueryClient } from "react-query";
+import useAuthAction from "./recoil/action";
 
 const Demo = () => {
+  const authAction = useAuthAction();
+
   const onFinish = (values) => {
     console.log("Success:", values);
+    authAction.login(values);
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -121,47 +126,49 @@ const data = [
   },
 ];
 
+const queryClient = new QueryClient();
+
 function App() {
   const [count, setCount] = useState(0);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
+    <QueryClientProvider client={queryClient}>
+      <div className="App">
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <p>Hello Vite + React!</p>
           <Demo />
-        </p>
-        <Table dataSource={data} columns={columns} />
-        <p>
-          <Button danger onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </Button>
-        </p>
-        <p>
-          Edit <code>App.jsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {" | "}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
+          <Table dataSource={data} columns={columns} />
+          <p>
+            <Button danger onClick={() => setCount((count) => count + 1)}>
+              count is: {count}
+            </Button>
+          </p>
+          <p>
+            Edit <code>App.jsx</code> and save to test HMR updates.
+          </p>
+          <p>
+            <a
+              className="App-link"
+              href="https://reactjs.org"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Learn React
+            </a>
+            {" | "}
+            <a
+              className="App-link"
+              href="https://vitejs.dev/guide/features.html"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Vite Docs
+            </a>
+          </p>
+        </header>
+      </div>
+    </QueryClientProvider>
   );
 }
 
